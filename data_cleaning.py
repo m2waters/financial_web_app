@@ -4,9 +4,6 @@ import json
 from datetime import datetime
 import numpy as np
 import matplotlib.pyplot as plt
-import torch
-import torch.nn as nn
-import torch.optim as optim
 
 def convert_unix_to_datetime(unix):
     return datetime.fromtimestamp(unix/1000)
