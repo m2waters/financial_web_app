@@ -18,6 +18,8 @@ def convert_tuple_to_list(tup):
 def index():
     conn = get_db_connections()
     data = conn.execute('SELECT * FROM financials').fetchall()
+    figs = conn.execute('SELECT * FROM figures').fetchall()
     data = convert_tuple_to_list(data)
     return render_template('index.html',
-                           data=data)
+                           data=data,
+                           figs=figs)
