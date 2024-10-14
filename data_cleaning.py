@@ -4,6 +4,7 @@ import json
 from datetime import datetime
 import numpy as np
 import matplotlib.pyplot as plt
+import sqlite3
 
 def convert_unix_to_datetime(unix):
     return datetime.fromtimestamp(unix/1000)
@@ -31,7 +32,32 @@ results['increase_in_value'] = results['open_close_difference'].apply(increase_i
 
 print(results.head())
 
-plt.plot(results['datetime'], (results['high']))
-plt.plot(results['datetime'], (results['low']))
-plt.plot(results['datetime'], (results['volume_weighted']))
-plt.show()
+# plt.plot(results['datetime'], (results['high']))
+# plt.plot(results['datetime'], (results['low']))
+# plt.plot(results['datetime'], (results['volume_weighted']))
+# plt.show()
+
+connection = sqlite3.connect('database.db')
+
+
+with open('schema.sql') as f:
+    connection.executescript(f.read())
+
+cur = connection.cursor()
+
+for i in range(len(results)):
+    cur.execute("INSERT INTO financials (created, company, volume, volume_weighted, opening_value, closing_value, high,low, trades) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                (str(results['datetime'][i]),
+                 "Apple",
+                 results['volume'][i],
+                 results['volume_weighted'][i],
+                 results['opening_value'][i],
+                 results['closing_value'][i],
+                 results['high'][i],
+                 results['low'][i],
+                 results['trades'][i]
+                )                
+            )
+
+connection.commit()
+connection.close()
