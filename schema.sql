@@ -1,4 +1,5 @@
 DROP TABLE IF EXISTS financials;
+DROP TABLE IF EXISTS figures;
 
 CREATE TABLE financials (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -12,3 +13,9 @@ CREATE TABLE financials (
     low FLOAT NOT NULL,
     trades INTEGER NOT NULL
     );
+
+CREATE TABLE figures (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    title TEXT NOT NULL,
+    link TEXT NOT NULL
+);
