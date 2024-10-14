@@ -5,6 +5,8 @@ from datetime import datetime
 import numpy as np
 import matplotlib.pyplot as plt
 import sqlite3
+import io
+import base64
 
 def convert_unix_to_datetime(unix):
     return datetime.fromtimestamp(unix/1000)
@@ -14,6 +16,14 @@ def increase_in_value(value):
         return 1
     elif value <= 0:
         return 0
+    
+def fig_to_base64(fig):
+    img = io.BytesIO()
+    fig.savefig(img,
+                format='png',
+                bbox_inches='tight')
+    img.seek(0)
+    return base64.b64encode(img.getvalue())
 
 r = requests.get('https://api.polygon.io/v2/aggs/ticker/AAPL/range/15/minute/2023-02-27/2024-02-27?adjusted=true&sort=asc&limit=50000&apiKey=KYr7DZiVgvC7FpOSt4G7aovObo1Q3qs2')
 # print(r.text[0])
@@ -32,10 +42,15 @@ results['increase_in_value'] = results['open_close_difference'].apply(increase_i
 
 print(results.head())
 
-# plt.plot(results['datetime'], (results['high']))
-# plt.plot(results['datetime'], (results['low']))
-# plt.plot(results['datetime'], (results['volume_weighted']))
-# plt.show()
+fig, ax = plt.subplots()
+
+ax.plot(results['datetime'], (results['high']))
+ax.plot(results['datetime'], (results['low']))
+ax.plot(results['datetime'], (results['volume_weighted']))
+
+encoded = fig_to_base64(fig)
+link = "data:image/png;base64, " + encoded.decode('utf-8')
+
 
 connection = sqlite3.connect('database.db')
 
@@ -58,6 +73,12 @@ for i in range(len(results)):
                  results['trades'][i]
                 )                
             )
+
+cur.execute("INSERT INTO figures (title, link) VALUES (?, ?)",
+            ("TestPlot",
+            link
+            )
+        )
 
 connection.commit()
 connection.close()
