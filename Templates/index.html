@@ -2,6 +2,7 @@
 
 {% block content %}
     <h1>{% block title%} Welcome to Matt's Finances and Bazaar {% endblock %}</h1>
+    <img src="{{ figs[0][2] }}">
     <table>
         <tr>
             <th>datetime</th>
@@ -27,4 +28,5 @@
             </tr>
         {% endfor %}
     </table>
+
 {% endblock %}
