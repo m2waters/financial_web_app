@@ -2,6 +2,10 @@
     width:auto
 }
 
+.main {
+    margin-top: 50px;
+}
+
 .main h1 {
     color: blueviolet;
 }
@@ -11,4 +15,70 @@
     width: 70%;
     padding: 10px;
     text-align: center;
+    width: 90%;
+}
+
+.table-centre {
+    margin-left: auto;
+    margin-right: auto;
+    border: 3px;
+}
+
+.table-centre table {  
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.table-centre table, th, td {
+    border: 1px solid;
+    text-align: center;
+}
+
+.table-centre th, td {
+    padding: 5px;
+}
+
+.table-centre tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+.table-centre th {
+    background-color: blueviolet;
+    color: white;
+}
+
+.navbar ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: #000;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+}
+
+.navbar li {
+    float: right;
+    border-left: 1px solid #fff;
+}
+
+.navbar li, a {
+    display: block;
+    color: white;
+    text-align: center;
+    text-decoration: none;
+}
+
+.navbar a {
+    padding: 20px 24px;
+}
+
+.nav-item:hover {
+    background-color: blueviolet;
+}
+
+.nav-item:active {
+    background-color: blueviolet;
 }
