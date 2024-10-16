@@ -44,6 +44,8 @@ fig, ax = plt.subplots()
 
 ax.plot(results['datetime'], (results['high']))
 ax.plot(results['datetime'], (results['low']))
+
+fig.set_figwidth(18)
 # ax.plot(results['datetime'], (results['volume_weighted']))
 
 encoded = fig_to_base64(fig)
