@@ -4,33 +4,6 @@
 <div class="main">
     <div class="centre">
         <h1>{% block title%} Welcome to Matt's Finances and Bazaar {% endblock %}</h1>
-        <img src="{{ figs[0][2] }}">
-        <table>
-            <tr>
-                <th>datetime</th>
-                <th>Company</th>
-                <th>Volume</th>
-                <th>Weighted Volume</th>
-                <th>Opening Value</th>
-                <th>Closing Value</th>
-                <th>Highest Value</th>
-                <th>Lowest Value</th>
-                <th>Trades</th>
-            </tr>
-            {% for row in data %}
-                <tr>
-                    <td>{{ row[1] }}</td>
-                    <td>{{ row[2] }}</td>
-                    <td>{{ row[3] }}</td>
-                    <td>{{ row[4] }}</td>
-                    <td>{{ row[5] }}</td>
-                    <td>{{ row[6] }}</td>
-                    <td>{{ row[7] }}</td>
-                    <td>{{ row[8] }}</td>
-                    <td>{{ row[9] }}</td>
-                </tr>
-            {% endfor %}
-        </table>
     </div>
 </div>
 {% endblock %}
