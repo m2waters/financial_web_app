@@ -1,0 +1,14 @@
+.body {
+    width:auto
+}
+
+.main h1 {
+    color: blueviolet;
+}
+
+.centre {
+    margin: auto;
+    width: 70%;
+    padding: 10px;
+    text-align: center;
+}
