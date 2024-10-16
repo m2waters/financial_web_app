@@ -6,6 +6,17 @@
     <div class="centre">
         <h1>{% block title%} Data {% endblock %}</h1>
         <img src="{{ figs[0][2] }}">
+        <form action="/update-data" method="post">
+            <p>Ticker</p>
+            <input type="text" id="ticker" name="ticker" placeholder="e.g. AAPL">
+            <p>Interval</p>
+            <input type="number" id="time_period" name="time_period" placeholder="e.g. 15 minutes">
+            <p>Date From</p>
+            <input type="date" id="start_date" name="start_date" placeholder="e.g. dd-mm-yyyy">
+            <p>Date To</p>
+            <input type="date" id="end_date" name="end_date" placeholder="e.g. dd-mm-yyyy">
+            <input type="submit" value="Submit">
+        </form>
         <div class="table-centre">
             <table>
                 <tr>
