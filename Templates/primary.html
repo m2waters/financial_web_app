@@ -7,8 +7,19 @@
     <title>{% block title %} {% endblock %}</title>
 </head>
 <body>   
+    <nav class="navbar">
+        <ul>
+            <li style="float: left;"><a class="navbar-brand" href="{{ url_for('index') }}">MF&amp;B</a></li>
+            <li><a class="nav-item" href="soemthing">Home</a></li>
+            <li><a class="nav-item" href="about">About</a></li>
+            <li><a class="nav-item" href="{{ url_for('data') }}">Data</a></li>
+        </ul>
+    </nav>
     <div class="container">
-        {% block content %} {% endblock %}
+        {% block content %}
+
+
+        {% endblock %}
     </div>
 </body>
 </html>
