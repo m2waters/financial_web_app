@@ -6,15 +6,25 @@ import json
 from datetime import datetime
 import numpy as np
 import matplotlib.pyplot as plt
+import matplotlib
+matplotlib.use('Agg')
 import sqlite3
 import io
 import base64
 
+###########################################
+
 app = Flask(__name__)
+
+###########################################
+########    FUNCTIONS   ###################
+###########################################
 
 def get_db_connections():
     conn = sqlite3.connect('database.db')
     return conn
+
+
 
 def convert_tuple_to_list(tup):
     array = []
@@ -23,18 +33,19 @@ def convert_tuple_to_list(tup):
         array.append(new_list)
     return array
 
-def pull_data(ticker='AAPL'):
 
-    def convert_unix_to_datetime(unix):
+def convert_unix_to_datetime(unix):
         return datetime.fromtimestamp(unix/1000)
 
-    def increase_in_value(value):
+
+def increase_in_value(value):
         if value > 0:
             return 1
         elif value <= 0:
             return 0
-        
-    def fig_to_base64(fig):
+
+
+def fig_to_base64(fig):
         img = io.BytesIO()
         fig.savefig(img,
                     format='png',
@@ -42,45 +53,34 @@ def pull_data(ticker='AAPL'):
         img.seek(0)
         return base64.b64encode(img.getvalue())
 
+def plot(x_data, y_data):
+     
+    fig, ax = plt.subplots()
+    fig.set_figwidth(18)
+    ax.plot(x_data, y_data)
+    return "data:image/png;base64, " + fig_to_base64(fig).decode('utf-8')
+
+     
+
+
+def pull_data(ticker='AAPL'):
+
     api = 'https://api.polygon.io/v2/aggs/ticker/' + ticker + '/range/15/minute/2023-02-27/2024-02-27?adjusted=true&sort=asc&limit=50000&apiKey=KYr7DZiVgvC7FpOSt4G7aovObo1Q3qs2'
-
-    r = requests.get(api)
-
-    j = json.loads(r.text)
-
+    j = json.loads((requests.get(api)).text)
 
     results = pd.DataFrame(j['results'])
     results.rename(columns={'v': 'volume', 'vw': 'volume_weighted', 'o': 'opening_value', 'c': 'closing_value', 'h': 'high', 'l': 'low', 't': 'datetime', 'n': 'trades'}, inplace=True)
-
     results['datetime'] = results['datetime'].apply(convert_unix_to_datetime)
     results['open_close_difference'] = results['closing_value'] - results['opening_value']
     results['increase_in_value'] = results['open_close_difference'].apply(increase_in_value)
 
-    print(results.head())
-
-
-    fig, ax = plt.subplots()
-
-    ax.plot(results['datetime'], (results['high']))
-    ax.plot(results['datetime'], (results['low']))
-
-    fig.set_figwidth(18)
-    # ax.plot(results['datetime'], (results['volume_weighted']))
-
-    encoded = fig_to_base64(fig)
-    link = "data:image/png;base64, " + encoded.decode('utf-8')
-
-
+    link = plot(results['datetime'], results['high'])
+    
     connection = sqlite3.connect('database.db')
-
-
     with open('schema.sql') as f:
         connection.executescript(f.read())
-
     cur = connection.cursor()
-
-    for i in range(len(results)):
-        
+    for i in range(len(results)):       
         cur.execute("INSERT INTO financials (created, company, volume, volume_weighted, opening_value, closing_value, high, low, trades) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
                     (str(results['datetime'][i]),
                     ticker,
@@ -93,16 +93,20 @@ def pull_data(ticker='AAPL'):
                     int(results['trades'][i]),
                     )                
                 )
-
     cur.execute("INSERT INTO figures (title, link) VALUES (?, ?)",
                 ("TestPlot",
                 link
                 )
             )
+    
+    plt.close()
 
     connection.commit()
     connection.close()
 
+#####################################################
+############    ROUTES   ############################
+#####################################################
 
 @app.route("/")
 def index():
@@ -131,7 +135,5 @@ def update_data():
     print(ticker)
 
     pull_data(ticker)
-
-
 
     return redirect(request.referrer)
