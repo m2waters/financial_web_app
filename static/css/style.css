@@ -82,3 +82,21 @@
 .nav-item:active {
     background-color: blueviolet;
 }
+
+.choice {
+    float: left;
+    margin-right: 20px;
+}
+
+.choice-last {
+    margin-bottom: 15px;
+}
+
+.choice-first {
+    margin-bottom: 15px;
+    margin-right: 20px;
+}
+
+.finished {
+    float: none;
+}
