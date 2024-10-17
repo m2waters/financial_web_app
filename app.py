@@ -53,19 +53,18 @@ def fig_to_base64(fig):
         img.seek(0)
         return base64.b64encode(img.getvalue())
 
-def plot(x_data, y_data):
+def plot(x_data_list, y_data_list):
      
     fig, ax = plt.subplots()
     fig.set_figwidth(18)
-    ax.plot(x_data, y_data)
+    for i in range(len(x_data_list)):
+        ax.plot(x_data_list[i], y_data_list[i])
     return "data:image/png;base64, " + fig_to_base64(fig).decode('utf-8')
 
-     
 
+def pull_data(ticker='AAPL', start_date='2023-02-27', end_date='2024-02-27'):
 
-def pull_data(ticker='AAPL'):
-
-    api = 'https://api.polygon.io/v2/aggs/ticker/' + ticker + '/range/15/minute/2023-02-27/2024-02-27?adjusted=true&sort=asc&limit=50000&apiKey=KYr7DZiVgvC7FpOSt4G7aovObo1Q3qs2'
+    api = 'https://api.polygon.io/v2/aggs/ticker/' + ticker + '/range/15/minute/' + start_date + '/' + end_date + '?adjusted=true&sort=asc&limit=50000&apiKey=KYr7DZiVgvC7FpOSt4G7aovObo1Q3qs2'
     j = json.loads((requests.get(api)).text)
 
     results = pd.DataFrame(j['results'])
@@ -74,8 +73,11 @@ def pull_data(ticker='AAPL'):
     results['open_close_difference'] = results['closing_value'] - results['opening_value']
     results['increase_in_value'] = results['open_close_difference'].apply(increase_in_value)
 
-    link = plot(results['datetime'], results['high'])
-    
+    x_list = [results['datetime'], results['datetime']]    
+    y_list = [results['high'], results['low']]
+
+    link = plot(x_list, y_list)
+
     connection = sqlite3.connect('database.db')
     with open('schema.sql') as f:
         connection.executescript(f.read())
@@ -132,8 +134,11 @@ def data():
 @app.route('/update-data', methods=['POST'])
 def update_data():
     ticker = request.form['ticker']
-    print(ticker)
+    start_date = request.form['start_date']
+    end_date = request.form['end_date']
+    print(ticker, start_date, end_date)
+    print(type(ticker), type(start_date), type(end_date))
 
-    pull_data(ticker)
+    pull_data(ticker, start_date, end_date)
 
     return redirect(request.referrer)
