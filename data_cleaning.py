@@ -86,3 +86,7 @@ def pull_data(ticker='AAPL'):
 
     connection.commit()
     connection.close()
+
+
+if __name__ == '__main__':
+    pull_data()
