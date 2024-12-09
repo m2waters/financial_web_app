@@ -19,3 +19,6 @@ CREATE TABLE figures (
     title TEXT NOT NULL,
     link TEXT NOT NULL
 );
+
+
+

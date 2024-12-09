@@ -74,7 +74,7 @@ def pull_data(ticker='AAPL', start_date='2023-02-27', end_date='2024-02-27'):
     results['increase_in_value'] = results['open_close_difference'].apply(increase_in_value)
 
     x_list = [results['datetime']]    
-    y_list = [results['trades']]
+    y_list = [results['high']]
 
     link = plot(x_list, y_list)
 
