@@ -64,7 +64,7 @@ def plot(x_data_list, y_data_list):
 
 def pull_data(ticker='AAPL', start_date='2023-02-27', end_date='2024-02-27'):
 
-    api = 'https://api.polygon.io/v2/aggs/ticker/' + ticker + '/range/15/minute/' + start_date + '/' + end_date + '?adjusted=true&sort=asc&limit=50000&apiKey=KYr7DZiVgvC7FpOSt4G7aovObo1Q3qs2'
+    api = 'https://api.polygon.io/v2/aggs/ticker/' + ticker + '/range/15/minute/' + start_date + '/' + end_date + '?adjusted=true&sort=asc&limit=50000&apiKey=' + APIKEY
     j = json.loads((requests.get(api)).text)
 
     results = pd.DataFrame(j['results'])
