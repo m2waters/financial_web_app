@@ -11,6 +11,8 @@ matplotlib.use('Agg')
 import sqlite3
 import io
 import base64
+from dotenv import load_dotenv
+import os
 
 ###########################################
 
@@ -64,7 +66,10 @@ def plot(x_data_list, y_data_list):
 
 def pull_data(ticker='AAPL', start_date='2023-02-27', end_date='2024-02-27'):
 
-    api = 'https://api.polygon.io/v2/aggs/ticker/' + ticker + '/range/15/minute/' + start_date + '/' + end_date + '?adjusted=true&sort=asc&limit=50000&apiKey=' + APIKEY
+    load_dotenv()
+    API_KEY = os.getenv('API_KEY')
+
+    api = 'https://api.polygon.io/v2/aggs/ticker/' + ticker + '/range/15/minute/' + start_date + '/' + end_date + '?adjusted=true&sort=asc&limit=50000&apiKey=' + API_KEY
     j = json.loads((requests.get(api)).text)
 
     results = pd.DataFrame(j['results'])
