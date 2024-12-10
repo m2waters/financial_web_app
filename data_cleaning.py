@@ -28,7 +28,7 @@ def pull_data(ticker='AAPL'):
         img.seek(0)
         return base64.b64encode(img.getvalue())
 
-    r = requests.get('https://api.polygon.io/v2/aggs/ticker/NVDA/range/15/minute/2023-02-27/2024-02-27?adjusted=true&sort=asc&limit=50000&apiKey=KYr7DZiVgvC7FpOSt4G7aovObo1Q3qs2')
+    r = requests.get('https://api.polygon.io/v2/aggs/ticker/NVDA/range/15/minute/2023-02-27/2024-02-27?adjusted=true&sort=asc&limit=50000&apiKey=' + APIKEY)
 
     j = json.loads(r.text)
 
