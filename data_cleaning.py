@@ -7,6 +7,8 @@ import matplotlib.pyplot as plt
 import sqlite3
 import io
 import base64
+import os
+from dotenv import load_dotenv
 
 
 def pull_data(ticker='AAPL'):
@@ -27,8 +29,11 @@ def pull_data(ticker='AAPL'):
                     bbox_inches='tight')
         img.seek(0)
         return base64.b64encode(img.getvalue())
+    
+    load_dotenv()
+    API_KEY = os.getenv('API_KEY')
 
-    r = requests.get('https://api.polygon.io/v2/aggs/ticker/NVDA/range/15/minute/2023-02-27/2024-02-27?adjusted=true&sort=asc&limit=50000&apiKey=' + APIKEY)
+    r = requests.get('https://api.polygon.io/v2/aggs/ticker/NVDA/range/15/minute/2023-02-27/2024-02-27?adjusted=true&sort=asc&limit=50000&apiKey=' + API_KEY)
 
     j = json.loads(r.text)
 
