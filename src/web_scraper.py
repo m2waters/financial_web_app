@@ -22,3 +22,7 @@ driver.get(link)
 driver.implicitly_wait(100)
 
 driver.get("https://google.co.uk/search?q=football")
+
+driver.implicitly_wait(100)
+
+driver.quit()
