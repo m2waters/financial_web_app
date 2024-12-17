@@ -164,3 +164,8 @@ cython_debug/
 # Database Management
 
 database.db
+
+
+# Generated Files
+
+extracted_text
