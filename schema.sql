@@ -1,5 +1,6 @@
 DROP TABLE IF EXISTS financials;
 DROP TABLE IF EXISTS figures;
+DROP TABLE IF EXISTS reddit_posts;
 
 CREATE TABLE financials (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -18,6 +19,14 @@ CREATE TABLE figures (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     title TEXT NOT NULL,
     link TEXT NOT NULL
+);
+
+CREATE TABLE reddit_posts (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    post_title TEXT NOT NULL,
+    author TEXT,
+    permalink TEXT,
+    upvote_ratio FLOAT
 );
 
 
