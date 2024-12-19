@@ -2,9 +2,7 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from urllib.parse import urlencode
 import csv, json, time
-import logging, os
 from dataclasses import dataclass, field, fields, asdict
-from concurrent.futures import ThreadPoolExecutor
 import sqlite3
 
 
@@ -19,6 +17,7 @@ class TempDataStore:
     post_title: str = ""
     author: str = ""
     permalink: str = ""
+    subreddit: str = ""
     upvote_ratio: float = 0.0
 
     def __post_init__(self):
@@ -55,14 +54,15 @@ class StoreData:
         if not data_to_save:
             return
         for data_point in data_to_save:
-            print(data_point.post_title)
+            
             cursor, connection = open_db_connection()
             self.db_connection_open = True
             cursor.execute(
-                "INSERT INTO reddit_posts (post_title, author, permalink, upvote_ratio) VALUES (?, ?, ?, ?)",
+                "INSERT INTO reddit_posts (post_title, author, permalink, subreddit, upvote_ratio) VALUES (?, ?, ?, ?, ?)",
                 (data_point.post_title,
                 data_point.author,
                 data_point.permalink,
+                data_point.subreddit,
                 data_point.upvote_ratio
                 )
             )
@@ -94,9 +94,9 @@ def get_post(url, retries=3, data_pipeline=None):
             raw_data.click()
             time.sleep(1)
             json_text = driver.find_element(By.TAG_NAME, "pre").text
-            print(json_text)
+            
             resp = json.loads(json_text)
-            print(resp)
+            
             if resp:
                 success = True
                 children=resp["data"]["children"]
@@ -107,6 +107,7 @@ def get_post(url, retries=3, data_pipeline=None):
                         post_title = data["title"],
                         author = data["author_fullname"],
                         permalink = data["permalink"],
+                        subreddit = data["subreddit_name_prefixed"],
                         upvote_ratio = data["upvote_ratio"]
                     )
       
@@ -124,9 +125,12 @@ def get_post(url, retries=3, data_pipeline=None):
 
 
 
-
-
+start_time = time.time()
+limit = 50
 feed_pipeline = StoreData(storage_queue_limit=100)
-get_post(url="https://www.reddit.com/r/investing.json?limit=100", data_pipeline=feed_pipeline)
+get_post(url="https://www.reddit.com/r/investing.json?limit={}".format(limit), data_pipeline=feed_pipeline)
 feed_pipeline.save_to_db()
 
+end_time = time.time()
+time_taken = round(end_time - start_time, 2)
+print(f'Time to run for {limit} posts: {time_taken} seconds')
