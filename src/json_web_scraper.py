@@ -126,7 +126,7 @@ def get_post(url, retries=3, data_pipeline=None):
 
 
 start_time = time.time()
-limit = 50
+limit = 100
 feed_pipeline = StoreData(storage_queue_limit=100)
 get_post(url="https://www.reddit.com/r/investing.json?limit={}".format(limit), data_pipeline=feed_pipeline)
 feed_pipeline.save_to_db()
