@@ -26,6 +26,7 @@ CREATE TABLE reddit_posts (
     post_title TEXT NOT NULL,
     author TEXT,
     permalink TEXT,
+    subreddit TEXT,
     upvote_ratio FLOAT
 );
 
